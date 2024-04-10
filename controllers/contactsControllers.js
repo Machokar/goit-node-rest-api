@@ -1,7 +1,9 @@
 import {
+  addContact,
   getContactById,
   listContacts,
   removeContact,
+  updateContactbyId,
 } from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 async function getAllContacts(req, res, next) {
@@ -46,11 +48,7 @@ async function updateContact(req, res, next) {
   try {
     const { id } = req.params;
     const newData = req.body;
-
-    const data = await updateContactById(id, newData);
-    if (!data) {
-      throw HttpError(404);
-    }
+    const data = await updateContactbyId(id, newData);
     res.status(200).json(data);
   } catch (error) {
     next(error);
