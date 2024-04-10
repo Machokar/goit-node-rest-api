@@ -5,11 +5,11 @@ import {
   removeContact,
   updateContactbyId,
 } from "../services/contactsServices.js";
-import HttpError from "../helpers/HttpError.js";
+import httpError from "../helpers/HttpError.js";
 async function getAllContacts(req, res, next) {
   try {
-    const AllContacts = await listContacts();
-    res.status(200).json(AllContacts);
+    const allContacts = await listContacts();
+    res.status(200).json(allContacts);
   } catch (error) {
     next(error);
   }
@@ -17,11 +17,11 @@ async function getAllContacts(req, res, next) {
 async function getOneContact(req, res, next) {
   try {
     const { id } = req.params;
-    const AllContacts = await getContactById(id);
-    if (!AllContacts) {
-      throw HttpError(404);
+    const allContacts = await getContactById(id);
+    if (!allContacts) {
+      throw httpError(404);
     }
-    res.status(200).json(AllContacts);
+    res.status(200).json(allContacts);
   } catch (error) {
     next(error);
   }
@@ -29,8 +29,8 @@ async function getOneContact(req, res, next) {
 async function deleteContact(req, res, next) {
   try {
     const { id } = req.params;
-    const AllContacts = await removeContact(id);
-    res.status(200).json(AllContacts);
+    const allContacts = await removeContact(id);
+    res.status(200).json(allContacts);
   } catch (error) {
     next(error);
   }
@@ -38,8 +38,8 @@ async function deleteContact(req, res, next) {
 async function createContact(req, res, next) {
   try {
     const { name, email, phone } = req.body;
-    const CreateContact = await addContact(name, email, phone);
-    res.status(201).json(CreateContact);
+    const createContact = await addContact(name, email, phone);
+    res.status(201).json(createContact);
   } catch (error) {
     next(error);
   }
