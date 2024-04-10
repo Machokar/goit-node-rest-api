@@ -47,8 +47,8 @@ async function createContact(req, res, next) {
 async function updateContact(req, res, next) {
   try {
     const { id } = req.params;
-    const newData = req.body;
-    const data = await updateContactbyId(id, newData);
+    const editContacts = req.body;
+    const data = await updateContactbyId(id, editContacts);
     res.status(200).json(data);
   } catch (error) {
     next(error);

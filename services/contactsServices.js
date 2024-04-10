@@ -50,10 +50,10 @@ async function addContact(name, email, phone) {
     console.log(error.message);
   }
 }
-async function updateContactbyId(id, newData) {
+async function updateContactbyId(id, editContacts) {
   try {
-    const data = await fs.readFile(contactsPath);
-    let contacts = JSON.parse(data);
+    const Allcontacts = await fs.readFile(contactsPath);
+    let contacts = JSON.parse(Allcontacts);
 
     const index = contacts.findIndex((contact) => contact.id === id);
 
@@ -63,7 +63,7 @@ async function updateContactbyId(id, newData) {
 
     contacts[index] = {
       ...contacts[index],
-      ...newData,
+      ...editContacts,
     };
 
     await fs.writeFile(contactsPath, JSON.stringify(contacts));
