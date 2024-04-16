@@ -1,11 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 import contactsRouter from "./routes/contactsRouter.js";
-
+dotenv.config();
 const app = express();
-
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
@@ -21,6 +21,16 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-app.listen(3000, () => {
-  console.log("Server is running. Use our API on port: 3000");
-});
+// Ensure MargedUrl is properly defined
+
+mongoose
+  .connect(process.env.Marged_Url)
+  .then(() => {
+    app.listen(3000, () => {
+      console.log("Server is running. Database connection successful.");
+    });
+  })
+  .catch((error) => {
+    console.error("Failed to connect to MongoDB:", error);
+    process.exit(1); // Exit the process if unable to connect to MongoDB
+  });
