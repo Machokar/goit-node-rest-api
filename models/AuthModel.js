@@ -20,4 +20,4 @@ const pathSchema = new Schema({
     default: null,
   },
 });
-export const User = model("user", pathSchema);
+export const User = model("User", pathSchema);
