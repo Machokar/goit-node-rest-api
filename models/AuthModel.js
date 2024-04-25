@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import MongooseError from "../helpers/MongooseError.js";
 
 const pathSchema = new Schema({
   password: {
@@ -20,4 +21,5 @@ const pathSchema = new Schema({
     default: null,
   },
 });
+pathSchema.post("save", MongooseError);
 export const User = model("User", pathSchema);
