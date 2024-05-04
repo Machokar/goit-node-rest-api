@@ -7,6 +7,8 @@ import Jimp from "jimp";
 import gravatar from "gravatar";
 import path from "path";
 import { User } from "../models/AuthModel.js";
+import { nanoid } from "nanoid";
+import { sendEmail } from "../helpers/sentEmail.js";
 dotenv.config();
 const { SECRET } = process.env;
 const avatarpath = path.join(process.cwd(), "public", "avatars");
@@ -19,11 +21,20 @@ export const register = async (req, res, next) => {
     }
     const hashPassword = await bcrypt.hash(password, 10);
     const avatarUrl = gravatar.url(email);
+    const verificationToken = nanoid();
     const newUser = await User.create({
       ...req.body,
       password: hashPassword,
       avatarURL: avatarUrl,
+      verificationToken,
     });
+    const verifyEmail = {
+      to: email,
+      subject: "Email verification",
+      html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${verificationToken}">Click to verify your email</a>`,
+      text: "Click to verify your email",
+    };
+    await sendEmail(verifyEmail);
     res.status(201).json({
       email: newUser.email,
       password,
@@ -94,4 +105,42 @@ export const updateAvatar = async (req, res, next) => {
   await User.findByIdAndUpdate(_id, { avatarURL: avatarUrl });
 
   res.json({ avatarURL: avatarUrl });
+};
+export const verifyEmail = async (req, res, next) => {
+  try {
+    const { verificationToken } = req.params;
+    const token = await User.findOne({ verificationToken });
+    if (!token) {
+      throw httpError(404, "User not found");
+    }
+    await User.findByIdAndUpdate(token._id, {
+      verify: true,
+      verificationToken: "",
+    });
+    res.status(200).json({ message: "Verification successful" });
+  } catch (error) {
+    next(error);
+  }
+};
+export const resentEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const userEmail = await User.findOne({ email });
+    if (!userEmail) {
+      throw httpError(404, "Email is not found");
+    }
+    if (userEmail.verify) {
+      throw httpError(404, "Verification has already been passed");
+    }
+    const verifyEmail = {
+      to: email,
+      subject: "Email verification",
+      html: `<a target="_blank" href="http://localhost:3000/api/users/verify/${userEmail.verificationToken}">Click to verify your email</a>`,
+      text: "Click to verify your email",
+    };
+    await sendEmail(verifyEmail);
+    res.status(200).json({ message: "Verification email sent" });
+  } catch (error) {
+    next(error);
+  }
 };

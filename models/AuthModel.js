@@ -23,6 +23,14 @@ const pathSchema = new Schema({
   avatarURL: {
     type: String,
   },
+  verify: {
+    type: Boolean,
+    default: false,
+  },
+  verificationToken: {
+    type: String,
+    required: [true, "Verify token is required"],
+  },
 });
 pathSchema.post("save", MongooseError);
 export const User = model("User", pathSchema);

@@ -9,3 +9,6 @@ export const registerForm = Joi.object({
   password: Joi.string().required(),
   phone: Joi.string().optional(),
 });
+export const emailForm = Joi.object({
+  email: Joi.string().email().required(),
+});
