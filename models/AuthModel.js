@@ -20,6 +20,9 @@ const pathSchema = new Schema({
     type: String,
     default: null,
   },
+  avatarURL: {
+    type: String,
+  },
 });
 pathSchema.post("save", MongooseError);
 export const User = model("User", pathSchema);
