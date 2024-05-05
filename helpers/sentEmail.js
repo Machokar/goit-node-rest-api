@@ -2,18 +2,14 @@ import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 
 dotenv.config();
-const {
-  transport_host,
-  transport_port,
-  transport_auth_user,
-  transport_auth_pass,
-} = process.env;
+const { transportHost, transportPort, transportAuthUser, transportAuthPass } =
+  process.env;
 const sentEmail = {
-  host: transport_host,
-  port: transport_port,
+  host: transportHost,
+  port: transportPort,
   auth: {
-    user: transport_auth_user,
-    pass: transport_auth_pass,
+    user: transportAuthUser,
+    pass: transportAuthPass,
   },
 };
 const transporter = nodemailer.createTransport(sentEmail);
